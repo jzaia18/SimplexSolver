@@ -1,11 +1,16 @@
 from fractions import Fraction
 
 VERBOSE = True
+LATEX = True
+
+def print_tableau(tab):
+    if LATEX:
+        print_tableau_latex(tab)
+    else:
+        print_tableau_text(tab)
 
 # Print a tableau in a neat format
-def print_tableau(tab):
-    #print(*[[str(x) for x in row] for row in tab], sep='\n')
-
+def print_tableau_text(tab):
     for row in tab[:-1]:
         for elem in row[:-1]:
             print('{:8s}'.format(str(elem)), end='')
@@ -18,6 +23,41 @@ def print_tableau(tab):
         print('{:8s}'.format(str(elem)), end='')
     print('│{:8s}'.format(str(tab[-1][-1])))
 
+# Print a tableau in a neat format for latex
+def print_tableau_latex(tab):
+    print('\\begin{table}[!h]')
+    print('  \\centering')
+    print('  \\begin{tabular}{r |' + 'c '*(tableau_cols-1) +  '| c}')
+
+    print('    \\textbf{B}', end='')
+    for i in range(matrix_rows):
+        print(' & $X_{}$'.format(i+1), end='')
+    for i in range(matrix_cols):
+        print(' & $S_{}$'.format(i+1), end='')
+    print(' & \\')
+    print('    \\hline')
+
+    for row in tab[:-1]:
+        print('    LABEL', end='')
+
+        for elem in row:
+            if elem.denominator == 1:
+                print(' & ${}$'.format(elem.numerator), end='')
+            else:
+                print(' & $\\frac{{{}}}{{{}}}$'.format(elem.numerator, elem.denominator), end='')
+        print()
+
+    print('    \\hline')
+    print('         ', end='')
+    for elem in tab[-1]:
+        if elem.denominator == 1:
+            print(' & ${}$'.format(elem.numerator), end='')
+        else:
+            print(' & $\\frac{{{}}}{{{}}}$'.format(elem.numerator, elem.denominator), end='')
+
+    print()
+    print('  \\end{tabular}')
+    print('\\end{table}')
 
 def compute_next_tableau(prev_tab):
     # Copy previous tableau
@@ -40,7 +80,7 @@ def compute_next_tableau(prev_tab):
         if curr_pivot_val < 0 or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
             pivot_row = r
 
-    if VERBOSE: print('Pivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
+    if VERBOSE: print('\nPivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
 
     # Find new value for pivot row
     for c in range(tableau_cols):
