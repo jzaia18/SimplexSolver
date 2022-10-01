@@ -3,13 +3,14 @@ from fractions import Fraction
 VERBOSE = True
 LATEX = True
 
+# Print the tableau in whichever format is currently globally selected
 def print_tableau(tab):
     if LATEX:
         print_tableau_latex(tab)
     else:
         print_tableau_text(tab)
 
-# Print a tableau in a neat format
+# Print a tableau in a neat text format
 def print_tableau_text(tab):
     for row in tab[:-1]:
         for elem in row[:-1]:
@@ -34,7 +35,7 @@ def print_tableau_latex(tab):
         print(' & $X_{}$'.format(i+1), end='')
     for i in range(matrix_cols):
         print(' & $S_{}$'.format(i+1), end='')
-    print(' & \\')
+    print(' & \\\\')
     print('    \\hline')
 
     for row in tab[:-1]:
@@ -45,7 +46,7 @@ def print_tableau_latex(tab):
                 print(' & ${}$'.format(elem.numerator), end='')
             else:
                 print(' & $\\frac{{{}}}{{{}}}$'.format(elem.numerator, elem.denominator), end='')
-        print()
+        print('\\\\')
 
     print('    \\hline')
     print('         ', end='')
@@ -59,6 +60,7 @@ def print_tableau_latex(tab):
     print('  \\end{tabular}')
     print('\\end{table}')
 
+# Compute the next tableau given the current one
 def compute_next_tableau(prev_tab):
     # Copy previous tableau
     next_tab = [[elem for elem in row] for row in prev_tab]
