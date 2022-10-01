@@ -4,7 +4,7 @@ VERBOSE = True
 
 # Print a tableau in a neat format
 def print_tableau(tab):
-    print(*tab, sep='\n')
+    print(*[[str(x) for x in row] for row in tab], sep='\n')
 
 
 def compute_next_tableau(prev_tab):
@@ -28,13 +28,28 @@ def compute_next_tableau(prev_tab):
         if curr_pivot_val < 0 or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
             pivot_row = r
 
-    if VERBOSE: print('Pivot chosen: ({}, {})', pivot_row + 1, pivot_col + 1)
+    if VERBOSE: print('Pivot chosen: ({}, {})'.format(pivot_row + 1, pivot_col + 1))
+
+    for c in range(tableau_cols):
+        next_tab[pivot_row][c] /= prev_tab[pivot_row][pivot_col]
+
+    for r in range(tableau_rows):
+        if r == pivot_row:
+            continue
+
+        for c in range(tableau_cols):
+            next_tab[r][c] -= prev_tab[r][pivot_col] * next_tab[pivot_row][c]
+
+    return next_tab
 
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
 
     matrix_rows = len(input_matrix)
     matrix_cols = len(input_matrix[0])
+
+    tableau_rows = matrix_rows + 1
+    tableau_cols = matrix_rows + matrix_cols + 1
 
     # First, normalize matrix
     smallest = min([min(row) for row in input_matrix])
@@ -57,4 +72,7 @@ if __name__ == '__main__':
     # Convert all numbers to fractions for ease of computation
     tab = [[Fraction(elem) for elem in row] for row in tab]
 
-    print_tableau(tab)
+    while tab is not None:
+        print_tableau(tab)
+
+        tab = compute_next_tableau(tab)
