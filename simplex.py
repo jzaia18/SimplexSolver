@@ -16,7 +16,7 @@ def compute_next_tableau(prev_tab):
     if minval >= 0:
         return None
 
-    # Assign pivt column
+    # Assign pivot column
     pivot_col = prev_tab[-1].index(minval)
     pivot_row = 0
 
@@ -28,11 +28,13 @@ def compute_next_tableau(prev_tab):
         if curr_pivot_val < 0 or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
             pivot_row = r
 
-    if VERBOSE: print('Pivot chosen: ({}, {})'.format(pivot_row + 1, pivot_col + 1))
+    if VERBOSE: print('Pivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
 
+    # Find new value for pivot row
     for c in range(tableau_cols):
         next_tab[pivot_row][c] /= prev_tab[pivot_row][pivot_col]
 
+    # Compute all other rows based on pivot value
     for r in range(tableau_rows):
         if r == pivot_row:
             continue
@@ -72,6 +74,7 @@ if __name__ == '__main__':
     # Convert all numbers to fractions for ease of computation
     tab = [[Fraction(elem) for elem in row] for row in tab]
 
+    # Keep generating tableaus until no more can be created
     while tab is not None:
         print_tableau(tab)
 
