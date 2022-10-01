@@ -1,10 +1,34 @@
 from fractions import Fraction
 
+VERBOSE = True
+
 # Print a tableau in a neat format
 def print_tableau(tab):
     print(*tab, sep='\n')
 
 
+def compute_next_tableau(prev_tab):
+    # Copy previous tableau
+    next_tab = [[elem for elem in row] for row in prev_tab]
+
+    # Find minimum in bottom row
+    minval = min(prev_tab[-1])
+    if minval >= 0:
+        return None
+
+    # Assign pivt column
+    pivot_col = prev_tab[-1].index(minval)
+    pivot_row = 0
+
+    # Determine pivot row
+    for r in range(matrix_rows):
+        curr_row_val = prev_tab[r][-1]/prev_tab[r][pivot_col]
+        curr_pivot_val = prev_tab[pivot_row][-1]/prev_tab[pivot_row][pivot_col]
+
+        if curr_pivot_val < 0 or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
+            pivot_row = r
+
+    if VERBOSE: print('Pivot chosen: ({}, {})', pivot_row + 1, pivot_col + 1)
 
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
@@ -31,6 +55,6 @@ if __name__ == '__main__':
         tab[offset][matrix_cols+offset] = 1
 
     # Convert all numbers to fractions for ease of computation
-    tab = [[Fraction(elem) for elem in row] for row in input_matrix]
+    tab = [[Fraction(elem) for elem in row] for row in tab]
 
     print_tableau(tab)
