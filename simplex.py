@@ -4,7 +4,19 @@ VERBOSE = True
 
 # Print a tableau in a neat format
 def print_tableau(tab):
-    print(*[[str(x) for x in row] for row in tab], sep='\n')
+    #print(*[[str(x) for x in row] for row in tab], sep='\n')
+
+    for row in tab[:-1]:
+        for elem in row[:-1]:
+            print('{:8s}'.format(str(elem)), end='')
+        print('│{:8s}'.format(str(row[-1])))
+
+    print('─'*(tableau_cols-1)*8, end='')
+    print('┼', end='')
+    print('─'*7)
+    for elem in tab[-1][:-1]:
+        print('{:8s}'.format(str(elem)), end='')
+    print('│{:8s}'.format(str(tab[-1][-1])))
 
 
 def compute_next_tableau(prev_tab):
