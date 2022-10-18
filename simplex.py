@@ -1,3 +1,4 @@
+from elim_dom_strats import elim_dom_strats
 from fractions import Fraction
 
 VERBOSE = True
@@ -110,25 +111,27 @@ def compute_next_tableau(prev_tab):
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
 
+    matrix = elim_dom_strats(input_matrix, verbose=VERBOSE)
+
     used_rows = []
-    matrix_rows = len(input_matrix)
-    matrix_cols = len(input_matrix[0])
+    matrix_rows = len(matrix)
+    matrix_cols = len(matrix[0])
 
     tableau_rows = matrix_rows + 1
     tableau_cols = matrix_rows + matrix_cols + 1
 
     # First, normalize matrix
-    smallest = min([min(row) for row in input_matrix])
+    smallest = min([min(row) for row in matrix])
     increment = 0
 
     if smallest <= 0:
         increment = -smallest + 1
 
         # Apply normalization onto matrix
-        input_matrix = [[elem + increment for elem in row] for row in input_matrix]
+        matrix = [[elem + increment for elem in row] for row in matrix]
 
     # Extend rows and cols to make tableau shape
-    tab = [row + [0]*(matrix_rows) + [1] for row in input_matrix]
+    tab = [row + [0]*(matrix_rows) + [1] for row in matrix]
     tab.append([-1]*matrix_cols + [0]*(matrix_rows+1))
 
     # Fill in identity matrix
