@@ -1,7 +1,7 @@
 from fractions import Fraction
 
 VERBOSE = True
-LATEX = True
+LATEX = False
 
 # Print the tableau in whichever format is currently globally selected
 def print_tableau(tab):
@@ -12,14 +12,22 @@ def print_tableau(tab):
 
 # Print a tableau in a neat text format
 def print_tableau_text(tab):
+    r = 0
     for row in tab[:-1]:
+        if r in used_rows:
+            print('x{}│ '.format(used_rows.index(r) + 1), end='')
+        else:
+            print('s{}│ '.format(r + 1), end='')
+        r += 1
         for elem in row[:-1]:
             print('{:8s}'.format(str(elem)), end='')
         print('│{:8s}'.format(str(row[-1])))
 
+    print('──┼─', end='')
     print('─'*(tableau_cols-1)*8, end='')
     print('┼', end='')
     print('─'*7)
+    print('  │ ', end='')
     for elem in tab[-1][:-1]:
         print('{:8s}'.format(str(elem)), end='')
     print('│{:8s}'.format(str(tab[-1][-1])))
@@ -79,9 +87,10 @@ def compute_next_tableau(prev_tab):
         curr_row_val = prev_tab[r][-1]/prev_tab[r][pivot_col]
         curr_pivot_val = prev_tab[pivot_row][-1]/prev_tab[pivot_row][pivot_col]
 
-        if curr_pivot_val < 0 or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
+        if curr_pivot_val < 0 or pivot_row in used_rows or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
             pivot_row = r
 
+    used_rows.append(pivot_row)
     if VERBOSE: print('\nPivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
 
     # Find new value for pivot row
@@ -101,6 +110,7 @@ def compute_next_tableau(prev_tab):
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
 
+    used_rows = []
     matrix_rows = len(input_matrix)
     matrix_cols = len(input_matrix[0])
 
