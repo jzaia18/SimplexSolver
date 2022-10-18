@@ -13,6 +13,16 @@ def print_tableau(tab):
 
 # Print a tableau in a neat text format
 def print_tableau_text(tab):
+    print('    ', end='')
+    for c in range(matrix_cols):
+        print('x{}      '.format(c+1), end='')
+    for c in range(matrix_rows):
+        print('s{}      '.format(c+1), end='')
+    print()
+    print('──┼─', end='')
+    print('─'*8*(matrix_cols+matrix_rows), end='')
+    print('┼────────')
+
     r = 0
     for row in tab[:-1]:
         if r in used_rows:
