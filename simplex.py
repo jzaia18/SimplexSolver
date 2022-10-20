@@ -64,7 +64,6 @@ def print_tableau_latex(tab):
         else:
             print('    S_{}'.format(r + 1), end='')
         r += 1
-        print('    LABEL', end='')
 
         for elem in row:
             if elem.denominator == 1:
