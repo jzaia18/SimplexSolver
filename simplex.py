@@ -1,8 +1,9 @@
 from elim_dom_strats import elim_dom_strats
+
 from fractions import Fraction
 
 VERBOSE = True
-LATEX = False
+LATEX = True
 
 # Print the tableau in whichever format is currently globally selected
 def print_tableau(tab):
@@ -121,8 +122,8 @@ def compute_next_tableau(prev_tab):
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
 
-    #matrix = elim_dom_strats(input_matrix, verbose=VERBOSE)
-    matrix = input_matrix
+    matrix = elim_dom_strats(input_matrix, verbose=VERBOSE)
+
     used_rows = []
     matrix_rows = len(matrix)
     matrix_cols = len(matrix[0])
@@ -152,42 +153,7 @@ if __name__ == '__main__':
     tab = [[Fraction(elem) for elem in row] for row in tab]
 
     # Keep generating tableaus until no more can be created
-    last_tab = tab
-    num_tabs = 0
-    while tab is not None and num_tabs < matrix_rows:
+    while tab is not None:
         print_tableau(tab)
 
         tab = compute_next_tableau(tab)
-        if tab is not None:
-            last_tab = tab.copy()
-        num_tabs += 1
-
-    # print out resulting value and strategies
-
-    print("normalization increment = ", increment)
-    print("Value of the game: ", 1/(last_tab[-1][-1]) - increment)
-    player1_strat = last_tab[-1][matrix_cols:-1]
-    player1_strat = [x/last_tab[-1][-1] for x in player1_strat]
-    player2_strat = [0]*matrix_cols
-    for row in last_tab[:matrix_rows]:
-        #print("row: ", row)
-        for index in range(matrix_cols):
-            player2_strat[index] = 0
-            if row[index] == 1:
-                #print("1: ", row[index])
-                player2_strat[index] = row[-1]/last_tab[-1][-1]
-                #print(player2_strat[index])
-                break
-            elif row[index] == 0:
-                #print("0: ", row[index])
-                pass
-            else:
-                #print("else: ", row[index])
-                player2_strat[index] = 0
-                continue
-
-    player1_strat = [str(frac) for frac in player1_strat]
-    player2_strat = [str(frac) for frac in player2_strat]
-    print("Player 1 optimal strategy: ", player1_strat)
-    print("player 2 optimal strategy: ", player2_strat)
-

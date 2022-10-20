@@ -10,7 +10,7 @@ def elim_dom_strats(mat, verbose=False):
 
             # Check that every col in this row is domm'd
             for c in range(len(mat[r])):
-                col_dommed = False
+                col_dommed = True
 
                 # Check all other rows at same col to find dom
                 for r2 in range(len(mat)):
@@ -18,16 +18,18 @@ def elim_dom_strats(mat, verbose=False):
                         continue
 
                     # row r is domm'd at this col
-                    if mat[r][c] <= mat[r2][c]:
-                        col_dommed = True
-                        break
+                    col_dommed = col_dommed and (mat[r][c] <= mat[r2][c])
+                    # if :
+                    #     col_dommed = col_dommed and True
+                    # else:    
+                    #     col_dommed = False
                 # If row r is not domm'd at 1 col, it is not domm'd
                 if not col_dommed:
                     whole_row_dommed = False
                     break
 
             # If the entire row is domm'd remove it
-            if whole_row_dommed:
+            if whole_row_dommed and not (len(mat) == 1):
                 mat = mat[:r] + mat[r+1:]
                 more_to_find = True # There may be more stuff to find
                 if verbose:
@@ -37,18 +39,19 @@ def elim_dom_strats(mat, verbose=False):
         for c in range(len(mat[0])):
             whole_col_dommed = True
             for r in range(len(mat)):
-                row_dommed = False
+                row_dommed = True
                 for c2 in range(len(mat[0])):
                     if c == c2:
                         continue
-                    if mat[r][c] >= mat[r][c2]:
-                        row_dommed = True
-                        break
+                    row_dommed = row_dommed and (mat[r][c] >= mat[r][c2])
+                    # if mat[r][c] >= mat[r][c2]:
+                    #     row_dommed = True
+                    #     break
                 if not row_dommed:
                     whole_col_dommed = False
                     break
 
-            if whole_col_dommed:
+            if whole_col_dommed and not (len(mat[0]) == 1):
                 for r in range(len(mat)):
                     mat[r] = mat[r][:c] + mat[r][c+1:]
                 more_to_find = True
@@ -59,9 +62,9 @@ def elim_dom_strats(mat, verbose=False):
     return mat
 
 if __name__ == '__main__':
-    mat = eval(input("Enter the game matrix:\n"), verbose=True)
+    mat = eval(input("Enter the game matrix:\n"))
 
-    mat = elim_dom_strats(mat)
+    mat = elim_dom_strats(mat, verbose=True)
 
     print()
     print('Result:')
