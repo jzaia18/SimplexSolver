@@ -1,6 +1,7 @@
 from elim_dom_strats import elim_dom_strats
 from fractions import Fraction
 
+# Options for making the output more friendly
 VERBOSE = True
 LATEX = False
 
@@ -13,6 +14,7 @@ def print_tableau(tab):
 
 # Print a tableau in a neat text format
 def print_tableau_text(tab):
+    # Print tableau header
     print('    ', end='')
     for c in range(matrix_cols):
         print('x{}      '.format(c+1), end='')
@@ -23,17 +25,24 @@ def print_tableau_text(tab):
     print('─'*8*(matrix_cols+matrix_rows), end='')
     print('┼───────')
 
+    # Print main rows of tableau
     r = 0
     for row in tab[:-1]:
+        # Print row label
         if r in used_rows:
             print('x{}│ '.format(used_rows.index(r) + 1), end='')
         else:
             print('s{}│ '.format(r + 1), end='')
         r += 1
+
+        # Print main row contents
         for elem in row[:-1]:
             print('{:8s}'.format(str(elem)), end='')
+
+        # Print far right column
         print('│{:8s}'.format(str(row[-1])))
 
+    # Print bottom row
     print('──┼─', end='')
     print('─'*(tableau_cols-1)*8, end='')
     print('┼', end='')
@@ -162,8 +171,11 @@ if __name__ == '__main__':
     # Keep generating tableaus until no more can be created
     last_tab = tab
     num_tabs = 0
-    while tab is not None and num_tabs < matrix_rows:
+    while tab is not None:
         print_tableau(tab)
+
+        if num_tabs >= matrix_rows:
+            break
 
         tab = compute_next_tableau(tab)
         if tab is not None:

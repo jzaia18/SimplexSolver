@@ -1,3 +1,4 @@
+# Perform elimination of dominated strategies on an input matrix (only removes dominated rows & cols that are fully dominated by 2 other row/col, no linear combinations)
 def elim_dom_strats(mat, verbose=False):
     # Loop until there are no more domm'd rows/cols to find
     more_to_find = True
@@ -10,13 +11,12 @@ def elim_dom_strats(mat, verbose=False):
 
             # Check all other rows find dom row
             for r2 in range(len(mat)):
-                if r == r2:
-                    continue
+                if r == r2: continue # Skip the current row
 
                 dommed = True
                 # Check that every col in this row dom's
                 for c in range(len(mat[r])):
-                    # if row r is not domm'd at this col, exit early
+                    # if this col is not dominated, this fails to dominate. exit early
                     if mat[r][c] > mat[r2][c]:
                         dommed = False
                         break
@@ -44,7 +44,7 @@ def elim_dom_strats(mat, verbose=False):
                 dommed = True
                 # Check that every row in this column dom's
                 for r in range(len(mat)):
-                    # If col c is not domm'd at this row, exit early
+                    # if this row is not dominated, this fails to dominate. exit early
                     if mat[r][c] < mat[r][c2]:
                         dommed = False
                         break
