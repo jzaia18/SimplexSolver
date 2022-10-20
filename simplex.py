@@ -106,7 +106,7 @@ def compute_next_tableau(prev_tab):
         if curr_pivot_val < 0 or pivot_row in used_rows or (curr_row_val > 0 and curr_row_val < curr_pivot_val and r not in used_rows):
             pivot_row = r
 
-    used_rows.append(pivot_row)
+    used_rows[pivot_col] = pivot_row
     if VERBOSE: print('\nPivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
 
     # Find new value for pivot row
@@ -130,9 +130,10 @@ if __name__ == '__main__':
         matrix = elim_dom_strats(matrix, verbose=VERBOSE)
 
 
-    used_rows = []
     matrix_rows = len(matrix)
     matrix_cols = len(matrix[0])
+    used_rows = [-1]*matrix_cols
+
 
     tableau_rows = matrix_rows + 1
     tableau_cols = matrix_rows + matrix_cols + 1
@@ -170,29 +171,18 @@ if __name__ == '__main__':
         num_tabs += 1
 
     # print out resulting value and strategies
-
+    print()
     print("Normalization increment = ", increment)
     print("Value of the game: ", 1/(last_tab[-1][-1]) - increment)
 
     player1_strat = last_tab[-1][matrix_cols:-1]
     player1_strat = [x/last_tab[-1][-1] for x in player1_strat]
-    player2_strat = [0]*matrix_rows
-    for row in last_tab[:matrix_rows]:
-        #print("row: ", row)
-        for index in range(matrix_cols):
-            player2_strat[index] = 0
-            if row[index] == 1:
-                #print("1: ", row[index])
-                player2_strat[index] = row[-1]/last_tab[-1][-1]
-                #print(player2_strat[index])
-                break
-            elif row[index] == 0:
-                #print("0: ", row[index])
-                pass
-            else:
-                #print("else: ", row[index])
-                player2_strat[index] = 0
-                continue
+    player2_strat = [0]*matrix_cols
+
+    for i in range(len(used_rows)):
+        r = used_rows[i]
+        if r != -1:
+            player2_strat[i] = last_tab[r][-1]/last_tab[-1][-1]
 
     player1_strat = [str(frac) for frac in player1_strat]
     player2_strat = [str(frac) for frac in player2_strat]
