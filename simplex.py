@@ -21,7 +21,7 @@ def print_tableau_text(tab):
     print()
     print('──┼─', end='')
     print('─'*8*(matrix_cols+matrix_rows), end='')
-    print('┼────────')
+    print('┼───────')
 
     r = 0
     for row in tab[:-1]:
@@ -57,7 +57,13 @@ def print_tableau_latex(tab):
     print(' & \\\\')
     print('    \\hline')
 
+    r = 0
     for row in tab[:-1]:
+        if r in used_rows:
+            print('    X_{}'.format(used_rows.index(r) + 1), end='')
+        else:
+            print('    S_{}'.format(r + 1), end='')
+        r += 1
         print('    LABEL', end='')
 
         for elem in row:
@@ -98,7 +104,7 @@ def compute_next_tableau(prev_tab):
         curr_row_val = prev_tab[r][-1]/prev_tab[r][pivot_col]
         curr_pivot_val = prev_tab[pivot_row][-1]/prev_tab[pivot_row][pivot_col]
 
-        if curr_pivot_val < 0 or pivot_row in used_rows or (curr_row_val > 0 and curr_row_val < curr_pivot_val):
+        if curr_pivot_val < 0 or pivot_row in used_rows or (curr_row_val > 0 and curr_row_val < curr_pivot_val and r not in used_rows):
             pivot_row = r
 
     used_rows.append(pivot_row)
@@ -121,7 +127,7 @@ def compute_next_tableau(prev_tab):
 if __name__ == '__main__':
     input_matrix = eval(input("Enter your matrix:\n"))
 
-    matrix = elim_dom_strats(input_matrix, verbose=VERBOSE)
+    matrix = input_matrix #elim_dom_strats(input_matrix, verbose=VERBOSE)
 
     used_rows = []
     matrix_rows = len(matrix)
