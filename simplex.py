@@ -60,9 +60,9 @@ def print_tableau_latex(tab):
     r = 0
     for row in tab[:-1]:
         if r in used_rows:
-            print('    X_{}'.format(used_rows.index(r) + 1), end='')
+            print('    $X_{}$'.format(used_rows.index(r) + 1), end='')
         else:
-            print('    S_{}'.format(r + 1), end='')
+            print('    $S_{}$'.format(r + 1), end='')
         r += 1
 
         for elem in row:
