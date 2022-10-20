@@ -50,9 +50,9 @@ def print_tableau_latex(tab):
     print('  \\begin{tabular}{r |' + 'c '*(tableau_cols-1) +  '| c}')
 
     print('    \\textbf{B}', end='')
-    for i in range(matrix_rows):
-        print(' & $X_{}$'.format(i+1), end='')
     for i in range(matrix_cols):
+        print(' & $X_{}$'.format(i+1), end='')
+    for i in range(matrix_rows):
         print(' & $S_{}$'.format(i+1), end='')
     print(' & \\\\')
     print('    \\hline')
@@ -124,9 +124,11 @@ def compute_next_tableau(prev_tab):
     return next_tab
 
 if __name__ == '__main__':
-    input_matrix = eval(input("Enter your matrix:\n"))
+    matrix = eval(input("Enter your matrix:\n"))
 
-    matrix = elim_dom_strats(input_matrix, verbose=VERBOSE)
+    if (input("Use elimination of dominated strategies [y/N]:").lower()[:1] == 'y'):
+        matrix = elim_dom_strats(matrix, verbose=VERBOSE)
+
 
     used_rows = []
     matrix_rows = len(matrix)
@@ -169,11 +171,12 @@ if __name__ == '__main__':
 
     # print out resulting value and strategies
 
-    print("normalization increment = ", increment)
+    print("Normalization increment = ", increment)
     print("Value of the game: ", 1/(last_tab[-1][-1]) - increment)
+
     player1_strat = last_tab[-1][matrix_cols:-1]
     player1_strat = [x/last_tab[-1][-1] for x in player1_strat]
-    player2_strat = [0]*matrix_cols
+    player2_strat = [0]*matrix_rows
     for row in last_tab[:matrix_rows]:
         #print("row: ", row)
         for index in range(matrix_cols):
