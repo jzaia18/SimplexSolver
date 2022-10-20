@@ -6,62 +6,66 @@ def elim_dom_strats(mat, verbose=False):
 
         # Loop through every row
         for r in range(len(mat)):
-            whole_row_dommed = True
+            dommed = False
 
-            # Check that every col in this row is domm'd
-            for c in range(len(mat[r])):
-                col_dommed = False
+            # Check all other rows find dom row
+            for r2 in range(len(mat)):
+                if r == r2:
+                    continue
 
-                # Check all other rows at same col to find dom
-                for r2 in range(len(mat)):
-                    if r == r2:
-                        continue
-
-                    # row r is domm'd at this col
-                    if mat[r][c] <= mat[r2][c]:
-                        col_dommed = True
+                dommed = True
+                # Check that every col in this row dom's
+                for c in range(len(mat[r])):
+                    # if row r is not domm'd at this col, exit early
+                    if mat[r][c] > mat[r2][c]:
+                        dommed = False
                         break
-                # If row r is not domm'd at 1 col, it is not domm'd
-                if not col_dommed:
-                    whole_row_dommed = False
-                    break
+
+                # If a row is dominated, we can exit this loop early
+                if dommed: break
 
             # If the entire row is domm'd remove it
-            if whole_row_dommed:
+            if dommed:
                 mat = mat[:r] + mat[r+1:]
                 more_to_find = True # There may be more stuff to find
                 if verbose:
-                    print('Remove dom\'d r{}:'.format(r+1), mat)
+                    print('Remove dom\'d r{}, mat:'.format(r+1), mat)
                 break
 
+        # Loop through every column
         for c in range(len(mat[0])):
-            whole_col_dommed = True
-            for r in range(len(mat)):
-                row_dommed = False
-                for c2 in range(len(mat[0])):
-                    if c == c2:
-                        continue
-                    if mat[r][c] >= mat[r][c2]:
-                        row_dommed = True
-                        break
-                if not row_dommed:
-                    whole_col_dommed = False
-                    break
+            dommed = False
 
-            if whole_col_dommed:
+            # Check all other columns to find dom column
+            for c2 in range(len(mat[0])):
+                if c == c2:
+                    continue
+
+                dommed = True
+                # Check that every row in this column dom's
+                for r in range(len(mat)):
+                    # If col c is not domm'd at this row, exit early
+                    if mat[r][c] < mat[r][c2]:
+                        dommed = False
+                        break
+
+                # If a col is dominated, we can exit this loop early
+                if dommed: break
+
+            if dommed:
                 for r in range(len(mat)):
                     mat[r] = mat[r][:c] + mat[r][c+1:]
                 more_to_find = True
                 if verbose:
-                    print('Remove dom\'d c{}:'.format(c+1), mat)
+                    print('Remove dom\'d c{}, mat:'.format(c+1), mat)
                 break
 
     return mat
 
 if __name__ == '__main__':
-    mat = eval(input("Enter the game matrix:\n"), verbose=True)
+    mat = eval(input("Enter the game matrix:\n"))
 
-    mat = elim_dom_strats(mat)
+    mat = elim_dom_strats(mat, verbose=True)
 
     print()
     print('Result:')
