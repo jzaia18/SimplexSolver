@@ -36,10 +36,11 @@ def pareto_optimal(mat):
 
             for r2 in range(len(mat)):
                 for c2 in range(len(mat[r2])):
+                    if r == r2 and c == c2: continue
                     state2 = mat[r2][c2]
 
                     # If both players prefer state 2, then state 1 cannot be pareto optimal
-                    if state2[0] > state1[0] and state2[1] > state1[1]:
+                    if state2[0] >= state1[0] and state2[1] >= state1[1]:
                         failed = True
                         break
 
