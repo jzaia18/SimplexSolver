@@ -124,7 +124,8 @@ def compute_next_tableau(prev_tab):
             pivot_row = r
 
     # Mark this row as used (needed for labeling)
-    used_rows[pivot_col] = pivot_row
+    if pivot_col < matrix_cols:
+        used_rows[pivot_col] = pivot_row
     if VERBOSE: print('\nPivot chosen: ({}, {})\n'.format(pivot_row + 1, pivot_col + 1))
 
     # Find new value for pivot row
@@ -188,8 +189,8 @@ if __name__ == '__main__':
         print_tableau(tab)
 
         # Stop going when there are no more rows with which to solve
-        if num_tabs >= matrix_rows:
-            break
+        #if num_tabs >= matrix_rows:
+        #    break
 
         tab = compute_next_tableau(tab)
         if tab is not None:
